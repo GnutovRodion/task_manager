@@ -1,0 +1,25 @@
+version: '3'
+
+volumes:
+  task_manager_volume:
+
+services:
+  task_container_db:
+    image: postgres:13.10
+    env_file: .env
+    volumes:
+      - task_manager_volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 10s
+      retries: 5
+  backend:
+    build: .
+    env_file: .env
+    command: >
+      sh -c "poetry run alembic upgrade head &&
+      poetry run uvicorn main:app --host 0.0.0.0 --port 8000"
+    depends_on:
+      - task_container_db
+    ports:
+      - "8000:8000"

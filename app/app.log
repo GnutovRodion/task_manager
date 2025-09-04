@@ -1,0 +1,5 @@
+2025-09-04 13:08:19,279 - INFO - Приложение запускается.
+2025-09-04 13:08:19,679 - INFO - Connected to database postgresql://developer:********@localhost:5432/task_manager_db
+2025-09-04 13:08:19,680 - INFO - Подключение к БД выполнено.
+2025-09-04 13:08:25,361 - INFO - Disconnected from database postgresql://developer:********@localhost:5432/task_manager_db
+2025-09-04 13:08:25,361 - INFO - Отключение от БД выполнено.
