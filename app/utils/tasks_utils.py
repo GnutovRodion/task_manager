@@ -88,10 +88,11 @@ async def task_modify(name: str, task: TaskUpdate) -> TaskBase:
         for k, v in task.model_dump(exclude_unset=True).items()
         if v is not None
     }
-    query = (tasks_table.update(
-        ).where(tasks_table.c.name == name
-        ).values(**data_to_change
-        ).returning(
+    query = (
+        tasks_table.update()
+        .where(tasks_table.c.name == name)
+        .values(**data_to_change)
+        .returning(
             tasks_table.c.name,
             tasks_table.c.description,
             tasks_table.c.status
@@ -125,10 +126,11 @@ async def task_modify_or_create(
     else:
         if task is None:
             return db_task.model_dump(), status.HTTP_200_OK
-        query = (tasks_table.update(
-            ).where(tasks_table.c.name == name
-            ).values(**data
-            ).returning(
+        query = (
+            tasks_table.update()
+            .where(tasks_table.c.name == name)
+            .values(**data)
+            .returning(
                 tasks_table.c.name,
                 tasks_table.c.description,
                 tasks_table.c.status
@@ -140,9 +142,11 @@ async def task_modify_or_create(
 
 async def remove_task(name: str) -> int:
     """Удаляет задачу."""
-    query = tasks_table.delete().where(
-        tasks_table.c.name == name
-        ).returning(tasks_table.c.name)
+    query = (
+        tasks_table.delete()
+        .where(tasks_table.c.name == name)
+        .returning(tasks_table.c.name)
+    )
     deleted = await db.fetch_one(query)
     if deleted is None:
         raise HTTPException(

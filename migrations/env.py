@@ -8,10 +8,9 @@ from dotenv import load_dotenv
 
 from app.models import tasks_model
 
+
 load_dotenv()
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
 config = context.config
 
 section = config.config_ini_section
@@ -23,23 +22,11 @@ else:
 config.set_section_option(section, "DB_USER", os.getenv("POSTGRES_USER"))
 config.set_section_option(section, "DB_PASS", os.getenv("POSTGRES_PASSWORD"))
 config.set_section_option(section, "DB_HOST", os.getenv("DB_HOST"))
-#raise KeyError(os.getenv('DB_USER'), os.getenv('DB_HOST'), os.getenv('DB_NAME'))
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
 target_metadata = [tasks_model.metadata]
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
 
 
 def run_migrations_offline() -> None:

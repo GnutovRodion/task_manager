@@ -1,8 +1,8 @@
 """
 Модуль с тестами для API эндпоинтов управления задачами в FastAPI-приложении.
-Включает тесты для операций CRUD, а также проверки на невалидные 
-данные и edge-кейсы. 
-Тесты используют pytest с фикстурами для изоляции 
+Включает тесты для операций CRUD, а также проверки на невалидные
+данные и edge-кейсы.
+Тесты используют pytest с фикстурами для изоляции
 (временная БД, сессии, клиент).
 """
 
@@ -48,7 +48,8 @@ def test_get_lost_task(client, temp_db):
 
 @pytest.mark.parametrize("task_data_create, case_name_create", [
     ({
-        "name": "task_example_1"},
+        "name": "task_example_1"
+    },
         "minimal_config"
     ),
     ({
@@ -82,7 +83,7 @@ def test_create_task(
     if "description" in task_data_create:
         assert task["description"] == task_data_create["description"]
     else:
-        assert task["description"] == None
+        assert task["description"] is None
     if "status" in task_data_create:
         assert task["status"] == task_data_create["status"]
     else:
@@ -162,11 +163,11 @@ def test_patch_task(
     task_name = f"task_{case_name_patch}"
     test_task = tasks_table.insert().values(
         name=task_name, status=TaskStatus.COMPLETED
-        ).returning(
-            tasks_table.c.name,
-            tasks_table.c.description,
-            tasks_table.c.status
-        )
+    ).returning(
+        tasks_table.c.name,
+        tasks_table.c.description,
+        tasks_table.c.status
+    )
     result = db_session.execute(test_task)
     db_session.commit()
     initial_task = result.mappings().first()
@@ -239,7 +240,7 @@ def test_put_task(client, temp_db, db_session):
     assert resp_if_not_task_and_not_body.status_code == 201
     put_task = resp_if_not_task_and_not_body.json()
     assert put_task["name"] == "put_task"
-    assert put_task["description"] == None
+    assert put_task["description"] is None
     assert put_task["status"] == "Создано"
     resp_if_not_task_and_body = client.put(
         "/tasks/new_put_task", json=new_task
